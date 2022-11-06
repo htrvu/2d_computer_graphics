@@ -31,5 +31,10 @@ Also, I just call Boundary Fill algorithm to fill a shape when we **select a sha
 ## 2. How to run
 <span id="build"></span>
 
+To run this application, let's clone the repository, then open it with IDE **Visual Studio 2019**.
+
+After that, just build and run!
+
+
 ## 3. Demo
 <span id="demo"></span>
