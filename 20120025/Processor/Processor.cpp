@@ -50,8 +50,8 @@ void Processor::menuEvents(int value) {
 
     if (option == CLEAR) {
         changeMouseCursor(IDLE);
-        Shape::layerCount = 0;
         Processor::reset();
+        Shape::layerCount = 0;
         glutPostRedisplay();
     }
     else if (isColorOption(option)) {
@@ -240,7 +240,7 @@ void Processor::mousePressed(int button, int state, int x, int y) {
         //////////////////////////////////////////////////////////////
         // Other drawing options
         if (!isDrawOption(currentDrawOption)) {
-            glutPostRedisplay();
+            //glutPostRedisplay();
             return;
         }
 
@@ -270,7 +270,7 @@ void Processor::mouseMove(int x, int y) {
 void Processor::display(void) {
     if (option == CLEAR) {
         glClear(GL_COLOR_BUFFER_BIT);
-        glFlush();
+        glFinish();
         return;
     }
 

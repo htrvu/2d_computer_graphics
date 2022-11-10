@@ -16,6 +16,7 @@ public:
             }
         }
         shapeMap.clear();
+        maxLayer = -1;
     }
 
 public:
@@ -46,10 +47,6 @@ public:
             return shapeMap[layer];
         }
         return nullptr;
-    }
-
-    Shape* getLastShape() {
-        return shapeMap[maxLayer];
     }
 
 public:
