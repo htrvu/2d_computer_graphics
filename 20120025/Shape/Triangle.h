@@ -8,9 +8,9 @@ public:
     }
 
 protected:
-    virtual void handlePoints() {
-        Polygon::handlePoints();
+    virtual void specifyBoundingBox() {
+        Polygon::specifyBoundingBox();
     }
 
-    virtual void specifyPoints() {}
+    virtual void specifyVertices() {}
 };

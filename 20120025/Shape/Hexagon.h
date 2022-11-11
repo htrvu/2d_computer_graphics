@@ -8,11 +8,14 @@ public:
     }
 
 protected:
-    virtual void handlePoints() {
-        Polygon::handlePoints();
+    virtual void specifyBoundingBox() {
+        topLeft = start;
+        bottomRight = end;
+        squareAdjust(topLeft, bottomRight);
+        specifyVertices();
     }
 
-    void specifyPoints() {
+    void specifyVertices() {
         points.clear();
 
         int x1 = topLeft.x();

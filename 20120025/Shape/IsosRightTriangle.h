@@ -8,7 +8,14 @@ public:
     }
 
 protected:
-    virtual void specifyPoints() {
+    void specifyBoundingBox() {
+        topLeft = start;
+        bottomRight = end;
+        squareAdjust(topLeft, bottomRight);
+        specifyVertices();
+    }
+
+    virtual void specifyVertices() {
         points.clear();
 
         int x1 = topLeft.x();

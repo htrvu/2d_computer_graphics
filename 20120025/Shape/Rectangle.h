@@ -9,11 +9,11 @@ public:
     }
 
 protected:
-    virtual void handlePoints() {
-        Polygon::handlePoints();
+    virtual void specifyBoundingBox() {
+        Polygon::specifyBoundingBox();
     }
 
-    void specifyPoints() {
+    void specifyVertices() {
         points.clear();
         points.push_back(bottomRight);
         points.push_back(Point(bottomRight.x(), topLeft.y()));

@@ -3,21 +3,17 @@
 
 class Ellipse: public Shape {
 protected:
-    Point topLeft, bottomRight; // boudary box
     Point center;
     int a, b;
 
 public:
     Ellipse(Point start, Point end, RGBColor fillColor) : Shape(start, end, fillColor) {
-        topLeft = start;
-        bottomRight = end;
-        layer = Shape::layerCount;
         name = "Ellipse in layer " + to_string(layer);
-        handlePoints();
+        specifyBoundingBox();
     }
 
 protected:
-    void handlePoints() {
+    void specifyBoundingBox() {
         center = start;
         a = abs(start.x() - end.x());
         b = abs(start.y() - end.y());
@@ -36,36 +32,9 @@ protected:
         bottomRight = Point(x2, y2);
     }
 
-public:
-    void setEnd(Point end) {
-        Shape::setEnd(end);
-        handlePoints();
-    }
-
 protected:
-    // Set layer of cells insides this Ellipse to this->layer
-    void specifyInsidePixels(Canvas& canvas) {
-        int x1 = topLeft.x();
-        int y1 = topLeft.y();
-        int x2 = bottomRight.x();
-        int y2 = bottomRight.y();
-
-        for (int i = x1; i <= x2; i++) {
-            for (int j = y1; j <= y2; j++) {
-                if (pow(i - center.x(), 2) / pow(a, 2) + pow(j - center.y(), 2) / pow(b, 2) <= 1) {
-                    int k = j;
-                    Cell cell = canvas.getCell(k, i);
-                    while (k <= y2 && (cell.getLayer() < layer || (cell.getLayer() == layer && !cell.isBoundary()))) {
-                        setPixel(i, k, layer, fillColor, canvas, false);
-                        k++;
-                        if (k <= y2)
-                            cell = canvas.getCell(k, i);
-                    }
-                    if (k > j)
-                        j = k - 1;
-                }
-            }
-        }
+    bool includes(Point p) {
+        return pow(p.x() - center.x(), 2) / pow(a, 2) + pow(p.y() - center.y(), 2) / pow(b, 2) < 1;
     }
 
     // MidPoint algorithm

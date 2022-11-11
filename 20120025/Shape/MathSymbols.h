@@ -9,7 +9,7 @@ public:
     }
 
 protected:
-    void specifyPoints() {
+    void specifyVertices() {
         points.clear();
 
         int x1 = topLeft.x();
@@ -45,7 +45,7 @@ public:
     }
 
 protected:
-    void specifyPoints() {
+    void specifyVertices() {
         points.clear();
 
         int x1 = topLeft.x();
@@ -73,7 +73,7 @@ public:
     }
 
 protected:
-    void specifyPoints() {
+    void specifyVertices() {
         points.clear();
 
         int x1 = topLeft.x();
@@ -110,7 +110,7 @@ public:
     }
 
 protected:
-    void specifyPoints() {
+    void specifyVertices() {
         points.clear();
 
         int x1 = topLeft.x();

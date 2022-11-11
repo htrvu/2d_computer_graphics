@@ -18,6 +18,7 @@ protected:
     RGBColor fillColor;
     bool shouldFill = false;
     Point start, end;   // start and end point in mouse events
+    Point topLeft, bottomRight; // boudary box
 
 public:
     static int layerCount;
@@ -28,16 +29,54 @@ public:
         this->end = end;
     }
 
-    Shape(Point start, Point end, RGBColor fillColor) : start(start), end(end), fillColor(fillColor) {
-        layerCount++;
+    Shape(Point start, Point end, RGBColor fillColor, bool autoSetLayer = true) : start(start), end(end), fillColor(fillColor) {
+        if (autoSetLayer) {
+            layerCount++;
+            layer = layerCount;
+        }
+
+        specifyBoundingBox();
     }
 
     virtual ~Shape() {}
 
 protected:
+    // specify the bounding box of shape (topLeft and bottomRight) from start and end
+    virtual void specifyBoundingBox() {
+        topLeft = start;
+        bottomRight = end;
+    }
+
+    virtual bool includes(Point p) {
+        return false;
+    }
+
     virtual void drawing(Canvas& canvas) {};
     virtual void filling(Canvas& canvas) {};
-    virtual void specifyInsidePixels(Canvas& canvas) {};
+
+    virtual void specifyInsidePixels(Canvas& canvas) {
+        int x1 = topLeft.x();
+        int y1 = topLeft.y();
+        int x2 = bottomRight.x();
+        int y2 = bottomRight.y();
+
+        for (int i = x1; i <= x2; i++) {
+            for (int j = y1; j <= y2; j++) {
+                if (includes(Point(i, j))) {
+                    int k = j;
+                    Cell cell = canvas.getCell(k, i);
+                    while (k <= y2 && (cell.getLayer() < layer || (cell.getLayer() == layer && !cell.isBoundary()))) {
+                        setPixel(i, k, layer, fillColor, canvas, false);
+                        k++;
+                        if (k <= y2)
+                            cell = canvas.getCell(k, i);
+                    }
+                    if (k > j)
+                        j = k - 1;
+                }
+            }
+        }
+    };
 
 public:
     virtual void setEnd(Point end) {
@@ -48,6 +87,8 @@ public:
         y = clip(y, 0, WIN_HEIGHT - 1);
 
         this->end = Point(x, y);
+
+        specifyBoundingBox();
     }
 
 public:
@@ -57,10 +98,6 @@ public:
 
     int getShapeLayer() {
         return layer;
-    }
-
-    void setFillColor(RGBColor color) {
-        fillColor = color;
     }
 
     void setShouldFill(bool shouldFill) {

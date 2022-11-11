@@ -9,15 +9,13 @@ public:
     Line(Point start, Point end) : Shape(start, end) {
     }
 
-    Line(Point start, Point end, RGBColor fillColor, int layer = -1) : Shape(start, end, fillColor) {
+    Line(Point start, Point end, RGBColor fillColor, int layer = -1) : Shape(start, end, fillColor, layer == -1) {
         if (layer == -1) {
-            this->layer = Shape::layerCount;
             this->isEdge = false;
             name = "Line in layer " + to_string(layer);
         } else {
             this->isEdge = true;
             this->layer = layer;
-            Shape::layerCount -= 1;
         }
     }
 
@@ -110,8 +108,7 @@ protected:
         }
     }
 
-    
-    void injectInsidePixels(Canvas& canvas) {
+    void specifyInsidePixels(Canvas& canvas) {
         drawing(canvas);
     }
 
