@@ -10,6 +10,6 @@ bool isDrawOption(int option);
 bool isColorOption(int option);
 bool isInScreen(int x, int y);
 
-bool isInPolygon(vector<Point>& points, Point p);
-
 float sDistance(Point p1, Point p2);
+
+void squareAdjust(Point& topLeft, Point& bottomRight);
