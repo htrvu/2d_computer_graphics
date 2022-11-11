@@ -24,9 +24,9 @@ The special thing is we can **select** a drawn shape, then fill it with a color.
 To deal with above problem, this is a summary of my ideas:
 - Assign the **layer** value to all drawn shapes and all pixels on the window (for detecting the shape we selected).
 - When drawing a shape, we will set the layer of this shape to all pixels inside it.
-- To fill a shape with a color, we need to fill its pixels. We just set color to a pixel whose layer value is NOT GREATER than the shape's layer value. Also, we call the Boundary Fill algorithm at all pixels inside the bounding box of that shape (with checking conditions to avoid redundant operations).
+- To fill a shape with a color, we need to fill all the pixels inside it. We just set color to a pixel whose layer value is NOT GREATER THAN the shape's layer value. Also, we call the Boundary Fill algorithm at all pixels inside the bounding box of that shape (with checking conditions to avoid redundant operations).
 
-Also, I just call Boundary Fill algorithm to fill a shape when we **select a shape and choose a color to fill** (it means the shape is already drawn). For other filling situations (such as first filling when we draw the shape, re-draw the window to update animation,...), I will use my custom filling algorithm (for better time complexity).
+Also, I just call Boundary Fill algorithm to fill a shape when we **select a shape and choose a color to fill** (it means the shape is already drawn). For other filling situations (such as first filling when we draw the shape, re-draw the window to update animation,...), I will use my custom filling algorithm (for better running time).
 
 ## 2. How to run
 <span id="build"></span>
