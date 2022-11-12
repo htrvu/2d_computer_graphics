@@ -87,7 +87,6 @@ void Processor::menuEvents(int value) {
             storage.removeShape(selectingShape->getShapeLayer());
             selectingShape = nullptr;
             shouldFillSelectingShape = false;
-
             shouldRedraw = true;
             glutPostRedisplay();
         }

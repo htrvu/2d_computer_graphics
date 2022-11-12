@@ -9,6 +9,7 @@ using namespace std;
 class Processor {
 public:
     static int option;
+
     static int window;
     static Canvas canvas;
     static Storage storage;
@@ -17,7 +18,6 @@ public:
 
     static bool isDrawing;
     static int currentDrawOption;
-    static Point startDrawingPoint;
     static Shape* newShape;
 
     static RGBColor pickingColor;
@@ -39,5 +39,4 @@ public:
 
 public:
     static void display();
-
 };

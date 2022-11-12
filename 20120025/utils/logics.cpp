@@ -57,5 +57,4 @@ void squareAdjust(Point& topLeft, Point& bottomRight) {
     }
 
     bottomRight = Point(topLeft.x() + side, topLeft.y() + side);
-
 }
