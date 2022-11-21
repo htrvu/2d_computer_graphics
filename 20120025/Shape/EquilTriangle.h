@@ -27,12 +27,12 @@ protected:
         
         x2 = x1 + side;
         int x3 = (x1 + x2) / 2;
-        int y3 = round((float)(side) * sqrt(3) / 2 + y1);
+        int y3 = round(1.0 * y2 - 1.0 * side * sqrt(3) / 2);
         
-        points.push_back(Point(x2, y3));
-        points.push_back(Point(x3, y1));
-        points.push_back(Point(x1, y3));
-
+        points.push_back(Point(x2, y2));
+        points.push_back(Point(x3, y3));
+        points.push_back(Point(x1, y2));
+        
         Triangle::specifyVertices();
     }
 };
