@@ -1,8 +1,6 @@
 #pragma once
 #include "./Cell.h"
 #include "../Constants/Colors.h"
-// #include "../utils/logics.h"
-// #include "../utils/glUtils.h"
 #include <vector>
 #include <iostream>
 using namespace std;
@@ -29,6 +27,9 @@ public:
     // NOTICE: x and y are n_row and n_column of the array, not the actual coordinate
 
     Cell getCell(int x, int y) {
+        if (x < 0 || x >= height || y < 0 || y >= width) {
+            return Cell();
+        }
         return cells[x][y];
     }
 
@@ -42,10 +43,6 @@ public:
             return true;
         }
         return false;
-    }
-
-    void setCellLayer(int x, int y, int layer) {
-        cells[x][y].setLayer(layer);
     }
 
     void clear() {

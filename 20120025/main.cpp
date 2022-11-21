@@ -38,15 +38,26 @@ int main(int argc, char** argv) {
     // Mouse events
     glutMouseFunc(Processor::mousePressed);
     glutMotionFunc(Processor::mouseMove);
-
     changeMouseCursor(IDLE);
+
+    // Key events
+    glutSpecialFunc(Processor::specialKeyPressed);
+    glutKeyboardFunc(Processor::normalKeyPressed);
 
     // Window events
     glutReshapeFunc(preventReshapeWindow);
 
-    // Run
+
+    // Display function
     glutDisplayFunc(Processor::display);
+
+    // Run now!
+    try {
     glutMainLoop();
+
+    } catch (exception e) {
+        cout << e.what() << endl;
+    }
 
     return EXIT_SUCCESS;
 }

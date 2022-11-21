@@ -11,8 +11,6 @@ int Processor::option = -1;
 Canvas Processor::canvas = Canvas();
 Storage Processor::storage = Storage();
 
-bool Processor::shouldRedraw = false;
-
 int Processor::currentDrawOption = -1;
 bool Processor::isDrawing = false;
 Shape* Processor::newShape = nullptr;
@@ -21,8 +19,6 @@ RGBColor Processor::pickingColor = Colors::GREEN;
 
 bool Processor::isSelecting = false;
 Shape* Processor::selectingShape = nullptr;
-bool Processor::shouldFillSelectingShape = false;
-
 
 ////////////////////////////////////////////////////////////////
 
@@ -32,7 +28,7 @@ void Processor::reset() {
     isDrawing = false;
     newShape = nullptr;
     selectingShape = nullptr;
-    shouldFillSelectingShape = false;
+    // shouldFillSelectingShape = false;
     currentDrawOption = -1;
     isSelecting = false;
     canvas.clear();
@@ -57,11 +53,12 @@ void Processor::menuEvents(int value) {
     else if (isColorOption(option)) {
         pickingColor = Colors::colorMap[option];
         if (selectingShape) {
-            shouldFillSelectingShape = true;
-            shouldRedraw = false;
+            selectingShape->setFillColor(pickingColor);
+            // shouldFillSelectingShape = true;
+            // shouldRedraw = false;
             glutPostRedisplay();
         } else {
-            shouldFillSelectingShape = false;
+            // shouldFillSelectingShape = false;
         }
     }
     else if (isDrawOption(option)) {
@@ -71,9 +68,10 @@ void Processor::menuEvents(int value) {
         isSelecting = false;
 
         if (selectingShape) {
-            selectingShape->deselect(canvas);
+            // selectingShape->deselect(canvas);
+            selectingShape->setSelecting(false);
             selectingShape = nullptr;
-            shouldRedraw = false;
+            // shouldRedraw = false;
             glutPostRedisplay();
         }
     }
@@ -86,8 +84,8 @@ void Processor::menuEvents(int value) {
         if (selectingShape) {
             storage.removeShape(selectingShape->getShapeLayer());
             selectingShape = nullptr;
-            shouldFillSelectingShape = false;
-            shouldRedraw = true;
+            // shouldFillSelectingShape = false;
+            // shouldRedraw = true;
             glutPostRedisplay();
         }
     }
@@ -203,16 +201,15 @@ void Processor::mousePressed(int button, int state, int x, int y) {
         }
         if (newShape) {
             storage.addShape(newShape);
-            shouldRedraw = true;
+            // shouldRedraw = true;
             glutPostRedisplay();
         }
     }
     else if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) {
         // Deselect the selecting shape (if any)
         if (selectingShape) {
-            selectingShape->deselect(canvas);
+            selectingShape->setSelecting(false);
             selectingShape = nullptr;
-            shouldRedraw = false;
         }
         
         //////////////////////////////////////////////////////////////
@@ -223,14 +220,14 @@ void Processor::mousePressed(int button, int state, int x, int y) {
 
             // If we click to a "valid" cell (not empty)
             if (shape != nullptr) {
-                shape->select(canvas);
+                shape->setSelecting(true);
                 selectingShape = shape;
-                shouldFillSelectingShape = false;   // after pick shape, we have to pick color to fill this shape
+                // shouldFillSelectingShape = false;   // after pick shape, we have to pick color to fill this shape
             } else {
                 selectingShape = nullptr;
             }
             
-            shouldRedraw = false;
+            // shouldRedraw = false;
             glutPostRedisplay();
             return;
         }
@@ -239,14 +236,11 @@ void Processor::mousePressed(int button, int state, int x, int y) {
         //////////////////////////////////////////////////////////////
         // Other drawing options
         if (!isDrawOption(currentDrawOption)) {
-            //glutPostRedisplay();
             return;
         }
 
         if (newShape) {
             newShape->setEnd(Point(x, y));
-            shouldRedraw = true;
-
             newShape = nullptr;
             isDrawing = false;
 
@@ -261,31 +255,80 @@ void Processor::mouseMove(int x, int y) {
 
     if (newShape) {
         newShape->setEnd(Point(x, y));
-        shouldRedraw = true;
         glutPostRedisplay();
     }
 }
 
+void Processor::normalKeyPressed(unsigned char key, int x, int y) {
+    if (!selectingShape)
+        return;
+
+    double angle = 0.0;
+    double sxy = 0.0;
+    // L, R, +, - key handlers
+    switch (key) {    
+        case '+':
+            sxy = 1.1;
+            break;
+        case '-':
+            sxy = 0.9;
+            break;
+        case 'l':
+            angle = 1;
+            break;
+        case 'r':
+            angle = -1;
+            break;
+        default:
+            return;
+    }
+
+    if (angle != 0.0)
+        selectingShape->rotate(angle);
+    else
+        selectingShape->scale(sxy, sxy);
+
+    glutPostRedisplay();
+}
+
+void Processor::specialKeyPressed(int key, int x, int y) {
+    if (!selectingShape)
+        return;
+
+    // Up, down, left, right arrow key handlers
+    double dx = 0.0, dy = 0.0;
+    switch (key) {
+        case GLUT_KEY_LEFT:
+            dx = -1;
+            break;
+        case GLUT_KEY_RIGHT:
+            dx = 1;
+            break;
+        case GLUT_KEY_UP:
+            dy = -1;
+            break;
+        case GLUT_KEY_DOWN:
+            dy = 1;
+            break;
+        default:
+            return;
+    }
+
+    selectingShape->translate(dx, dy);
+    glutPostRedisplay();
+}
+
+
 void Processor::display(void) {
+    glClear(GL_COLOR_BUFFER_BIT);
+    
     if (option == CLEAR) {
-        glClear(GL_COLOR_BUFFER_BIT);
         glFinish();
         return;
     }
 
-    if (shouldRedraw) {
-        glClear(GL_COLOR_BUFFER_BIT);
-        canvas.clear();
-        storage.draw(canvas);
-        shouldRedraw = false;
-    }
-    
-    // For filling the selecting shape
-    if (selectingShape && shouldFillSelectingShape) {
-        selectingShape->fill(canvas, pickingColor);
-        shouldFillSelectingShape = false;
-        selectingShape = nullptr;
-    }
-    
+    glClear(GL_COLOR_BUFFER_BIT);
+    canvas.clear();
+    storage.draw(canvas);
     glFlush();
 }

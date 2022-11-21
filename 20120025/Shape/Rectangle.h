@@ -19,5 +19,6 @@ protected:
         points.push_back(Point(bottomRight.x(), topLeft.y()));
         points.push_back(topLeft);
         points.push_back(Point(topLeft.x(), bottomRight.y()));
+        Polygon::specifyVertices();
     }
 };

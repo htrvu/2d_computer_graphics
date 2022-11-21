@@ -1,10 +1,12 @@
 #pragma once
 #include "./Shape.h"
+#include "./Line.h"
 
 class Ellipse: public Shape {
 protected:
     Point center;
     int a, b;
+    bool scaled = false;
 
 public:
     Ellipse(Point start, Point end, RGBColor fillColor) : Shape(start, end, fillColor) {
@@ -15,13 +17,16 @@ public:
 protected:
     void specifyBoundingBox() {
         center = start;
-        a = abs(start.x() - end.x());
-        b = abs(start.y() - end.y());
 
-        int x1 = clip(start.x() - a, 0, WIN_WIDTH - 1);
-        int y1 = clip(start.y() - b, 0, WIN_HEIGHT - 1);
-        int x2 = clip(start.x() + a, 0, WIN_WIDTH - 1);
-        int y2 = clip(start.y() + b, 0, WIN_HEIGHT - 1);
+        if (!scaled) {
+            a = abs(start.x() - end.x());
+            b = abs(start.y() - end.y());
+        }
+
+        int x1 = clip(center.x() - a, 0, WIN_WIDTH - 1);
+        int y1 = clip(center.y() - b, 0, WIN_HEIGHT - 1);
+        int x2 = clip(center.x() + a, 0, WIN_WIDTH - 1);
+        int y2 = clip(center.y() + b, 0, WIN_HEIGHT - 1);
 
         if (x1 > x2)
             swap(x1, x2);
@@ -32,31 +37,82 @@ protected:
         bottomRight = Point(x2, y2);
     }
 
-protected:
-    bool includes(Point p) {
-        return pow(p.x() - center.x(), 2) / pow(a, 2) + pow(p.y() - center.y(), 2) / pow(b, 2) < 1;
+    void findFillPoint() {
+        fillPoint = tMatrix.TransformPoint(center);
     }
 
+private:
+    void fixPoints(Point prevP, Point p, Canvas& canvas) {
+        int newX = 0, newY = 0;
+
+        if (abs(prevP.x() - p.x()) > 1) {
+            if (prevP.x() > p.x()) {
+                newX = prevP.x() - 1;
+            } else {
+                newX = prevP.x() + 1;
+            }
+        }
+
+        if (abs(prevP.y() - p.y()) > 1) {
+            if (prevP.y() > p.y()) {
+                newY = prevP.y() - 1;
+            } else {
+                newY = prevP.y() + 1;
+            }
+        }
+
+        if (newX != 0 && newY != 0) {
+            setPixel(newX, newY, layer, Colors::BOUNDARY, canvas, true);
+        }
+    }
+
+protected:
     // MidPoint algorithm
     void drawing(Canvas& canvas) {
-        if (a == 0 || b == 0) {
+        if (a <= 0 || b <= 0) {
             return;
         }
+
+        int cnt = 0;
 
         // draw boundary
         int xT = center.x(), yT = center.y();
         int x = 0, y = b;
         int p;
-        int x0 = a * a * 1.0 / (sqrt(a * a + b * b));
+        int x0 = round(a * a * 1.0 / (sqrt(a * a + b * b)));
 
+        // specify the actual bounding box (deal with translation and rotation transformation)
+        Point startPoint = tMatrix.TransformPoint(Point(x + xT, y + yT));
+        int minX = startPoint.x(), maxX = startPoint.x();
+        int minY = startPoint.y(), maxY = startPoint.y();
+
+        vector<Point> prevPoints;
         // First region
-        p = a * a / 4 + b * b - a * a * b;
+        p = round(a * a / 4 + b * b - a * a * b);
         while (x <= x0) {
             // Translate the points to its actual position then set pixels
-            setPixel(x + xT, y + yT, layer, Colors::BOUNDARY, canvas, true);
-            setPixel(-x + xT, y + yT, layer, Colors::BOUNDARY, canvas, true);
-            setPixel(-x + xT, -y + yT, layer, Colors::BOUNDARY, canvas, true);
-            setPixel(x + xT, -y + yT, layer, Colors::BOUNDARY, canvas, true);
+            vector<Point> points = {
+                Point(x + xT, y + yT),
+                Point(-x + xT, y + yT),
+                Point(x + xT, -y + yT),
+                Point(-x + xT, -y + yT)
+            };
+            vector<Point> tmp;
+            for (int i = 0; i < 4; i++) {
+                cnt++;
+                Point newP = tMatrix.TransformPoint(points[i]);
+                if (prevPoints.size() > 0) {
+                    Point prevP = prevPoints[i];
+                    Line(prevP, newP, Colors::BOUNDARY, layer).draw(canvas);
+                }
+                tmp.push_back(newP);
+                setPixel(newP.x(), newP.y(), layer, Colors::BOUNDARY, canvas, true);
+                minX = min(minX, newP.x());
+                maxX = max(maxX, newP.x());
+                minY = min(minY, newP.y());
+                maxY = max(maxY, newP.y());
+            }
+            prevPoints = tmp;
 
             if (p < 0) {
                 p += b * b * (2 * x + 3);
@@ -68,13 +124,30 @@ protected:
         }
 
         // Second region
-        p = b * b * (x + 1 / 2) * (x + 1 / 2) + a * a * (y - 1) * (y - 1) - a * a * b * b;
+        p = round(b * b * (x + 1 / 2) * (x + 1 / 2) + a * a * (y - 1) * (y - 1) - a * a * b * b);
         while (y >= 0) {
-            // Translate the points to its actual position then set pixels
-            setPixel(x + xT, y + yT, layer, Colors::BOUNDARY, canvas, true);
-            setPixel(-x + xT, y + yT, layer, Colors::BOUNDARY, canvas, true);
-            setPixel(-x + xT, -y + yT, layer, Colors::BOUNDARY, canvas, true);
-            setPixel(x + xT, -y + yT, layer, Colors::BOUNDARY, canvas, true);
+            vector<Point> points = {
+                Point(x + xT, y + yT),
+                Point(-x + xT, y + yT),
+                Point(x + xT, -y + yT),
+                Point(-x + xT, -y + yT)
+            };
+            vector<Point> tmp;
+            for (int i = 0; i < 4; i++) {
+            //     cnt++;
+                Point newP = tMatrix.TransformPoint(points[i]);
+                if (prevPoints.size() > 0) {
+                    Point prevP = prevPoints[i];
+                    Line(prevP, newP, Colors::BOUNDARY, layer).draw(canvas);
+                }
+                tmp.push_back(newP);
+                setPixel(newP.x(), newP.y(), layer, Colors::BOUNDARY, canvas, true);
+                minX = min(minX, newP.x());
+                maxX = max(maxX, newP.x());
+                minY = min(minY, newP.y());
+                maxY = max(maxY, newP.y());
+            }
+            prevPoints = tmp;
 
             if (p < 0) {
                 p += b * b * (2 * x + 2) - a * a * (2 * y - 3);
@@ -85,25 +158,21 @@ protected:
             y--;
         }
 
-        // inject layer and color value to pixels inside this Ellipse
-        // (it likes to fill the rectangle in the first time. for later filling, we use boundary fill algorithm)
-        specifyInsidePixels(canvas);
+        // set the actual bounding box
+        topLeft = Point(minX, minY);
+        bottomRight = Point(maxX, maxY);
+
+        filling(canvas);
     }
 
-    // Boundary fill algorithm
-    void filling(Canvas& canvas) {
-        int x1 = topLeft.x();
-        int y1 = topLeft.y();
-        int x2 = bottomRight.x();
-        int y2 = bottomRight.y();
 
-        // We loop through each pixel and run boundary fill algorithm, this can deal with the case
-        // when the shape is not connected on the screen
-        for (int x = x1; x <= x2; x++) {
-            for (int y = y1; y <= y2; y++) {
-                Fill::boundaryFill(x, y, layer, this->fillColor, canvas);
-            }
-        }
+public:
+    // Transformations
+
+    virtual void scale(double sx, double sy) {
+        // Keep the center of shape unchanged after scaling
+        a = round(sx * a);
+        b = round(sy * b);
+        scaled = true;
     }
-
 };

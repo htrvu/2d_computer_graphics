@@ -13,3 +13,6 @@ bool isInScreen(int x, int y);
 float sDistance(Point p1, Point p2);
 
 void squareAdjust(Point& topLeft, Point& bottomRight);
+
+// Return the bounding box of a set of points (topLeft and bottomRight)
+pair<Point, Point> findBoundingBox(vector<Point>& points);

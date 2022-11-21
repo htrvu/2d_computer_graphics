@@ -156,6 +156,7 @@
     <ClInclude Include="Clock\Clock.h" />
     <ClInclude Include="Constants\Colors.h" />
     <ClInclude Include="macros.h" />
+    <ClInclude Include="Matrix\Matrix.h" />
     <ClInclude Include="Processor\Processor.h" />
     <ClInclude Include="Shape\Arrow.h" />
     <ClInclude Include="Shape\Circle.h" />

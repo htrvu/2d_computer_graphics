@@ -15,4 +15,21 @@ public:
     int y() {
         return mY;
     }
+
+    void setX(int x) {
+        mX = x;
+    }
+
+    void setY(int y) {
+        mY = y;
+    }
+
+public:
+    Point operator+(const Point& p) {
+        return Point(mX + p.mX, mY + p.mY);
+    }
+
+    Point operator/(const int& n) {
+        return Point(mX / n, mY / n);
+    }
 };

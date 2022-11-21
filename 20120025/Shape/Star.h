@@ -23,7 +23,6 @@ protected:
         int width = abs(x1 - x2);
         int height = abs(y1 - y2);
 
-        // Otherwise, we could find the m_i points based on a pentagon (but width and height must be equal)
         Point m1(x1 + width / 2, y1);
         Point m2(x1, y1 + height * 3 / 10);
         Point m3(x1 + width * 1 / 5, y2);
@@ -42,5 +41,7 @@ protected:
         }
 
         points = { m1, i12, m2, i23, m3, i34, m4, i45, m5, i51 };
+
+        Polygon::specifyVertices();
     }
 };

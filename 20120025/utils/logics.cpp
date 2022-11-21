@@ -58,3 +58,26 @@ void squareAdjust(Point& topLeft, Point& bottomRight) {
 
     bottomRight = Point(topLeft.x() + side, topLeft.y() + side);
 }
+
+pair<Point, Point> findBoundingBox(vector<Point>& points) {
+    int minX = points[0].x();
+    int maxX = minX;
+    int minY = points[0].y();
+    int maxY = minY;
+
+    for (int i = 1; i < points.size(); i++) {
+        int x = points[i].x();
+        int y = points[i].y();
+
+        if (x < minX)
+            minX = x;
+        if (x > maxX)
+            maxX = x;
+        if (y < minY)
+            minY = y;
+        if (y > maxY)
+            maxY = y;
+    }
+
+    return make_pair(Point(minX, minY), Point(maxX, maxY));
+}

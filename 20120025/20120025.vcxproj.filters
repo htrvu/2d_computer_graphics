@@ -119,5 +119,8 @@
     <ClInclude Include="Shape\MathSymbols.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Matrix\Matrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

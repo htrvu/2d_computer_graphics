@@ -32,5 +32,7 @@ protected:
         points.push_back(Point(x2, y3));
         points.push_back(Point(x3, y1));
         points.push_back(Point(x1, y3));
+
+        Triangle::specifyVertices();
     }
 };

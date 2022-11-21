@@ -9,6 +9,7 @@
 #include "../Canvas/Canvas.h"
 #include "../Constants/Colors.h"
 #include "../algos/Fill.h"
+#include "../Matrix/Matrix.h"
 using namespace std;
 
 class Shape {
@@ -16,9 +17,11 @@ protected:
     int layer;
     string name;
     RGBColor fillColor;
-    bool shouldFill = false;
+    bool isSelecting = false;
+    Point fillPoint;    // starting point for filling
     Point start, end;   // start and end point in mouse events
-    Point topLeft, bottomRight; // boudary box
+    Point topLeft, bottomRight; // boundary box
+    Matrix tMatrix;  // transformation matrix
 
 public:
     static int layerCount;
@@ -40,6 +43,11 @@ public:
 
     virtual ~Shape() {}
 
+public:
+    void setFillColor(RGBColor fillColor) {
+        this->fillColor = fillColor;
+    }
+
 protected:
     // specify the bounding box of shape (topLeft and bottomRight) from start and end
     virtual void specifyBoundingBox() {
@@ -47,36 +55,16 @@ protected:
         bottomRight = end;
     }
 
-    virtual bool includes(Point p) {
-        return false;
+    virtual void findFillPoint() {}
+
+    virtual void drawing(Canvas& canvas) {}
+
+    virtual void filling(Canvas& canvas) {
+        findFillPoint();
+        if (canvas.getCell(fillPoint.x(), fillPoint.y()).isBoundary())
+            return;
+        Fill::boundaryFill(fillPoint.x(), fillPoint.y(), layer, fillColor, canvas);
     }
-
-    virtual void drawing(Canvas& canvas) {};
-    virtual void filling(Canvas& canvas) {};
-
-    virtual void specifyInsidePixels(Canvas& canvas) {
-        int x1 = topLeft.x();
-        int y1 = topLeft.y();
-        int x2 = bottomRight.x();
-        int y2 = bottomRight.y();
-
-        for (int i = x1; i <= x2; i++) {
-            for (int j = y1; j <= y2; j++) {
-                if (includes(Point(i, j))) {
-                    int k = j;
-                    Cell cell = canvas.getCell(k, i);
-                    while (k <= y2 && (cell.getLayer() < layer || (cell.getLayer() == layer && !cell.isBoundary()))) {
-                        setPixel(i, k, layer, fillColor, canvas, false);
-                        k++;
-                        if (k <= y2)
-                            cell = canvas.getCell(k, i);
-                    }
-                    if (k > j)
-                        j = k - 1;
-                }
-            }
-        }
-    };
 
 public:
     virtual void setEnd(Point end) {
@@ -90,7 +78,7 @@ public:
 
         specifyBoundingBox();
     }
-
+ 
 public:
     string getName() {
         return name;
@@ -100,34 +88,34 @@ public:
         return layer;
     }
 
-    void setShouldFill(bool shouldFill) {
-        this->shouldFill = shouldFill;
-    }
-
 public:
     void draw(Canvas& canvas, RGBColor fillColor = Colors::NONE) {
         if (fillColor != Colors::NONE) {
             this->fillColor = fillColor;
         }
 
+        if (isSelecting)
+            this->fillColor.darken();
+        else
+            this->fillColor.reset();
+
         drawing(canvas);
     }
 
-    void select(Canvas& canvas) {
-        RGBColor tmp = fillColor;
-        fillColor = fillColor.darker();
-        specifyInsidePixels(canvas);
-        fillColor = tmp;
-    }
-
-    void deselect(Canvas& canvas) {
-        specifyInsidePixels(canvas);
+    void setSelecting(bool isSelecting) {
+        this->isSelecting = isSelecting;
     }
 
     void fill(Canvas& canvas, RGBColor fillColor = Colors::NONE) {
         if (fillColor != Colors::NONE) {
             this->fillColor = fillColor;
         }
+
+        if (isSelecting)
+            this->fillColor.darken();
+        else
+            this->fillColor.reset();
+
 
         // layer == -1 means this shape is a part of other shape (ex. Line and Rectangle)
         if (layer != -1)
@@ -143,5 +131,35 @@ public:
             cout << "Time: " << clock.getTime() << " ms" << endl;
             cout << "----------------------------------------------" << endl;
         }
+    }
+
+public:
+    // Transformations
+
+    virtual void translate(double dx, double dy) {
+        tMatrix.Translate(dx, dy);
+        specifyBoundingBox();
+    }
+
+    virtual void rotate(double angle) {
+        // Rotate around center of shape
+        int xC = (topLeft.x() + bottomRight.x()) / 2;
+        int yC = (topLeft.y() + bottomRight.y()) / 2;
+        tMatrix.Translate(-xC, -yC);
+        tMatrix.Rotate(angle);
+        tMatrix.Translate(xC, yC);
+        specifyBoundingBox();
+    }
+
+    virtual void scale(double sx, double sy) {
+        // Keep the center of shape unchanged after scaling
+        int xC = (topLeft.x() + bottomRight.x()) / 2;
+        int yC = (topLeft.y() + bottomRight.y()) / 2;
+        int newXC = sx * xC;
+        int newYC = sy * yC;
+
+        tMatrix.Scale(sx, sy);
+        tMatrix.Translate(xC - newXC, yC - newYC);
+        specifyBoundingBox();
     }
 };

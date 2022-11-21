@@ -34,5 +34,7 @@ protected:
         Point p5(x2, p2.y());
 
         points = { p1, p2, p3, p4, p5 };
+
+        Polygon::specifyVertices();
     }
 };

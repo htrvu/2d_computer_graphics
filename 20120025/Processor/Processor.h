@@ -14,8 +14,6 @@ public:
     static Canvas canvas;
     static Storage storage;
     
-    static bool shouldRedraw;
-
     static bool isDrawing;
     static int currentDrawOption;
     static Shape* newShape;
@@ -24,7 +22,6 @@ public:
 
     static bool isSelecting;
     static Shape* selectingShape;
-    static bool shouldFillSelectingShape;
 
 private:
     static void reset();
@@ -36,6 +33,10 @@ public:
 public:
     static void mousePressed(int button, int state, int x, int y);
     static void mouseMove(int x, int y);
+
+public:
+    static void normalKeyPressed(unsigned char key, int x, int y);
+    static void specialKeyPressed(int key, int x, int y);
 
 public:
     static void display();

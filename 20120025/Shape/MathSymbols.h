@@ -34,6 +34,8 @@ protected:
         Point p12(x1 + 2 * width / 3, y1);
 
         points = { p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12 };
+
+        Polygon::specifyVertices();
     }
 };
 
@@ -62,6 +64,8 @@ protected:
         Point p4(x2, y1 + height / 3);
 
         points = { p1, p2, p3, p4 };
+
+        Polygon::specifyVertices();
     }
 };
 
@@ -99,6 +103,8 @@ protected:
         Point i81 = Line::findIntersection(Line(m8, m3), Line(m1, m6));
 
         points = { m1, m2, i23, m3, m4, i45, m5, m6, i67, m7, m8, i81 };
+
+        Polygon::specifyVertices();
     }
 };
 
@@ -127,5 +133,7 @@ protected:
         Point p4(x2, y1);
         
         points = { p1, p2, p3, p4 };
+
+        Polygon::specifyVertices();
     }
 };

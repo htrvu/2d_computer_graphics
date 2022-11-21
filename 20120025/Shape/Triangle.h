@@ -12,5 +12,7 @@ protected:
         Polygon::specifyBoundingBox();
     }
 
-    virtual void specifyVertices() {}
+    virtual void specifyVertices() {
+        Polygon::specifyVertices();
+    }
 };

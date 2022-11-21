@@ -18,7 +18,8 @@ public:
 
             int x = p.first, y = p.second;
             Cell cell = canvas.getCell(y, x);
-            if (cell.getLayer() != layer || cell.getColor() == fillColor || cell.isBoundary()) {
+            // if (cell.getLayer() != layer || cell.getColor() == fillColor || cell.isBoundary()) {
+            if (cell.getLayer() == layer && (cell.getColor() == fillColor || cell.isBoundary())) {
                 continue;
             }
 

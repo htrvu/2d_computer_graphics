@@ -30,7 +30,6 @@ void changeMouseCursor(int cursorType) {
             glutSetCursor(GLUT_CURSOR_CROSSHAIR);
             break;
         case SELECTING:
-            // glutSetCursor(GLUT_CURSOR_INFO);
             glutSetCursor(GLUT_CURSOR_TOP_SIDE);
             break;
         default:

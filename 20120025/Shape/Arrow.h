@@ -32,5 +32,7 @@ protected:
         Point p7(p2.x(), y2);
 
         points = { p1, p2, p3, p4, p5, p6, p7 };
+
+        Polygon::specifyVertices();
     }
 };
