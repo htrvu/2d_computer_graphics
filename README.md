@@ -31,4 +31,4 @@ After that, just build it and playaround!
 
 ## 3. Demo
 <span id="demo"></span>
-<a href="https://youtu.be/fQ8Pqp7Z3ms">Link Video</a>
+<a href="https://youtu.be/uLP3AdKRxbI">Link Video</a>
