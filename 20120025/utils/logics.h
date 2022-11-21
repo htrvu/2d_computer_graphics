@@ -8,7 +8,7 @@ int clip(int value, int min, int max);
 
 bool isDrawOption(int option);
 bool isColorOption(int option);
-bool isInScreen(int x, int y);
+bool isInScreen(int x, int y, int deltaX = 0, int deltaY = 0);
 bool isAlign(Point start, Point end);
 
 float sDistance(Point p1, Point p2);

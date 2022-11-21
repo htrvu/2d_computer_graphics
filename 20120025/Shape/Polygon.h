@@ -76,4 +76,10 @@ protected:
         // fill
         filling(canvas);
     }
+
+    void filling(Canvas& canvas) {
+        if (points.size() == 0)
+            return;
+        Shape::filling(canvas);
+    }
 };

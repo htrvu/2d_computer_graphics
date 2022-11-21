@@ -274,10 +274,10 @@ void Processor::normalKeyPressed(unsigned char key, int x, int y) {
             sxy = 0.9;
             break;
         case 'l':
-            angle = 1;
+            angle = -1;
             break;
         case 'r':
-            angle = -1;
+            angle = 1;
             break;
         default:
             return;

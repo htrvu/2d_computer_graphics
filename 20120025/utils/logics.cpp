@@ -25,8 +25,8 @@ bool isColorOption(int option) {
     return (option >= C_BLACK && option <= C_CYAN);
 }
 
-bool isInScreen(int x, int y) {
-    return (x >= 0 && x < WIN_WIDTH && y >= 0 && y < WIN_HEIGHT);
+bool isInScreen(int x, int y, int deltaX, int deltaY) {
+    return (x >= deltaX && x < WIN_WIDTH - deltaX && y >= deltaY && y < WIN_HEIGHT - deltaY);
 }
 
 bool isAlign(Point start, Point end) {

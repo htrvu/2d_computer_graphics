@@ -60,7 +60,7 @@ protected:
     virtual void drawing(Canvas& canvas) {}
 
     virtual void filling(Canvas& canvas) {
-        if (isAlign(start, end))
+        if (isAlign(start, end) || isAlign(topLeft, bottomRight))
             return;
         findFillPoint();
         if (canvas.getCell(fillPoint.x(), fillPoint.y()).isBoundary())
@@ -118,27 +118,17 @@ public:
         else
             this->fillColor.reset();
 
-
-        // layer == -1 means this shape is a part of other shape (ex. Line and Rectangle)
-        if (layer != -1)
-            cout << "Filling " << name << " with Boundary Fill algorithm" << endl;
-        
-        Clock clock;
-
-        clock.start();
         filling(canvas);
-        clock.stop();
-
-        if (layer != -1) {
-            cout << "Time: " << clock.getTime() << " ms" << endl;
-            cout << "----------------------------------------------" << endl;
-        }
     }
 
 public:
     // Transformations
 
     virtual void translate(double dx, double dy) {
+        // Do not allow to translate fillPoint outside the window
+        if (!isInScreen(fillPoint.x() + dx, fillPoint.y() + dy, 10, 10))
+            return;
+
         tMatrix.Translate(dx, dy);
         specifyBoundingBox();
     }

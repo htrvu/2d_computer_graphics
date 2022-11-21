@@ -46,31 +46,6 @@ protected:
         fillPoint = tMatrix.TransformPoint(center);
     }
 
-private:
-    void fixPoints(Point prevP, Point p, Canvas& canvas) {
-        int newX = 0, newY = 0;
-
-        if (abs(prevP.x() - p.x()) > 1) {
-            if (prevP.x() > p.x()) {
-                newX = prevP.x() - 1;
-            } else {
-                newX = prevP.x() + 1;
-            }
-        }
-
-        if (abs(prevP.y() - p.y()) > 1) {
-            if (prevP.y() > p.y()) {
-                newY = prevP.y() - 1;
-            } else {
-                newY = prevP.y() + 1;
-            }
-        }
-
-        if (newX != 0 && newY != 0) {
-            setPixel(newX, newY, layer, Colors::BOUNDARY, canvas, true);
-        }
-    }
-
 protected:
     // MidPoint algorithm
     void drawing(Canvas& canvas) {
@@ -78,15 +53,12 @@ protected:
             return;
         }
 
-        int cnt = 0;
-
-        // draw boundary
+        // Draw boundary
         int xT = center.x(), yT = center.y();
         int x = 0, y = b;
         int p;
         int x0 = round(a * a * 1.0 / (sqrt(a * a + b * b)));
 
-        // specify the actual bounding box (deal with translation and rotation transformation)
         Point startPoint = tMatrix.TransformPoint(Point(x + xT, y + yT));
         int minX = startPoint.x(), maxX = startPoint.x();
         int minY = startPoint.y(), maxY = startPoint.y();
@@ -104,7 +76,6 @@ protected:
             };
             vector<Point> tmp;
             for (int i = 0; i < 4; i++) {
-                cnt++;
                 Point newP = tMatrix.TransformPoint(points[i]);
                 if (prevPoints.size() > 0) {
                     Point prevP = prevPoints[i];
@@ -139,7 +110,6 @@ protected:
             };
             vector<Point> tmp;
             for (int i = 0; i < 4; i++) {
-            //     cnt++;
                 Point newP = tMatrix.TransformPoint(points[i]);
                 if (prevPoints.size() > 0) {
                     Point prevP = prevPoints[i];
@@ -163,21 +133,10 @@ protected:
             y--;
         }
 
-        // set the actual bounding box
+        // specify the actual bounding box
         topLeft = Point(minX, minY);
         bottomRight = Point(maxX, maxY);
 
         filling(canvas);
-    }
-
-
-public:
-    // Transformations
-
-    virtual void scale(double sx, double sy) {
-        // Keep the center of shape unchanged after scaling
-        a = round(sx * a);
-        b = round(sy * b);
-        scaled = true;
     }
 };

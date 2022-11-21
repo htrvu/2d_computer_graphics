@@ -23,10 +23,6 @@ public:
     }
 
 public:
-    double Get(int i, int j) {
-        return Elements[i][j];
-    }
-
     // Resets this Matrix to have the elements of the identity matrix.
     void Reset() {
         Elements = I_3x3;
@@ -65,7 +61,8 @@ public:
         Elements[2][2] = (m11 * m22 - m12 * m21) * invD;
     }
 
-    // Multiplies this Matrix by the matrix specified in the `other` parameter, by prepending the specified Matrix.
+    // Multiplies this Matrix by the matrix specified in the `other` parameter, by appending the specified Matrix.
+    // (this <- this * other)
     void Multiply(Matrix other) {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -78,7 +75,7 @@ public:
         }
     }
 
-    // Prepend to this Matrix a clockwise rotation, around the origin and by the specified angle (in degrees).
+    // Append to this Matrix a clockwise rotation, around the origin and by the specified angle (in degrees).
     void Rotate(double angle) {
         double radian = angle * PI / 180;
         double cos = std::cos(radian);
@@ -86,8 +83,8 @@ public:
 
         Matrix newMatrix = Matrix();
         newMatrix.Elements[0][0] = cos;
-        newMatrix.Elements[0][1] = -sin;
-        newMatrix.Elements[1][0] = sin;
+        newMatrix.Elements[0][1] = sin;
+        newMatrix.Elements[1][0] = -sin;
         newMatrix.Elements[1][1] = cos;
 
         Multiply(newMatrix);
@@ -129,8 +126,6 @@ public:
 
         double x = point.x();
         double y = point.y();
-        // int newX = clip(round(Elements[0][0] * x + Elements[1][0] * y + Elements[2][0]), 0, WIN_WIDTH - 1);
-        // int newY = clip(round(Elements[0][1] * x + Elements[1][1] * y + Elements[2][1]), 0, WIN_HEIGHT - 1);
         int newX = round(Elements[0][0] * x + Elements[1][0] * y + Elements[2][0]);
         int newY = round(Elements[0][1] * x + Elements[1][1] * y + Elements[2][1]);
 

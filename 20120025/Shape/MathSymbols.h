@@ -85,6 +85,9 @@ protected:
         int x2 = bottomRight.x();
         int y2 = bottomRight.y();
 
+        if (x1 == x2 || y1 == y2)
+            return;
+
         int width = abs(x1 - x2);
         int height = abs(y1 - y2);
 
@@ -98,9 +101,20 @@ protected:
         Point m8(x1 + 4 * width / 5, y1);
 
         Point i23 = Line::findIntersection(Line(m2, m5), Line(m3, m8));
+        if (i23 == Point(-1, -1))
+            return;
+
         Point i45 = Line::findIntersection(Line(m4, m7), Line(m5, m2));
+        if (i45 == Point(-1, -1))
+            return;
+        
         Point i67 = Line::findIntersection(Line(m6, m1), Line(m7, m4));
+        if (i67 == Point(-1, -1))
+            return;
+
         Point i81 = Line::findIntersection(Line(m8, m3), Line(m1, m6));
+        if (i81 == Point(-1, -1))
+            return;
 
         points = { m1, m2, i23, m3, m4, i45, m5, m6, i67, m7, m8, i81 };
 
