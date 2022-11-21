@@ -17,8 +17,13 @@ protected:
     void specifyBoundingBox() {
         center = tMatrix.TransformPoint(start);
 
-        if (!scaled) 
+        if (!scaled) {
+            // radius from draw event
             radius = sqrt(sDistance(start, end));
+            int maxRadius = min(center.x(), center.y());
+            if (radius > maxRadius)
+                radius = maxRadius;
+        }
         
         int x1 = clip(center.x() - radius, 0, WIN_WIDTH - 1);
         int y1 = clip(center.y() - radius, 0, WIN_HEIGHT - 1);

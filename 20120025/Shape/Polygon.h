@@ -43,22 +43,24 @@ protected:
 
 protected:
     virtual void findFillPoint() {
+        int x = 0, y = 0;
         if (points.size() > 0) {
-            int x = 0, y = 0;
             for (int i = 0; i < points.size(); i++) {
                 x += points[i].x();
                 y += points[i].y();
             }
             x /= points.size();
             y /= points.size();
-            fillPoint = Point(x, y);
         } else {
             int x1 = topLeft.x();
             int y1 = topLeft.y();
             int x2 = bottomRight.x();
             int y2 = bottomRight.y();
-            fillPoint = Point((x1 + x2) / 2, (y1 + y2) / 2);
+            x = (x1 + x2) / 2;
+            y = (y1 + y2) / 2;
         }
+
+        fillPoint = Point(clip(x, 0, WIN_WIDTH - 1), clip(y, 0, WIN_HEIGHT - 1));
     }
 
 

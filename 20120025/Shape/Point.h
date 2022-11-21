@@ -32,4 +32,8 @@ public:
     Point operator/(const int& n) {
         return Point(mX / n, mY / n);
     }
+
+    bool operator==(const Point& p) {
+        return mX == p.mX && mY == p.mY;
+    }
 };

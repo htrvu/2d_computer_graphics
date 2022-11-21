@@ -29,16 +29,20 @@ bool isInScreen(int x, int y) {
     return (x >= 0 && x < WIN_WIDTH && y >= 0 && y < WIN_HEIGHT);
 }
 
+bool isAlign(Point start, Point end) {
+    return (start.x() == end.x() || start.y() == end.y());
+}
+
 // Square of Euclid distance
 float sDistance(Point p1, Point p2) {
     return pow(p1.x() - p2.x(), 2) + pow(p1.y() - p2.y(), 2);
 }
 
-void squareAdjust(Point& topLeft, Point& bottomRight) {
-    int x1 = topLeft.x();
-    int y1 = topLeft.y();
-    int x2 = bottomRight.x();
-    int y2 = bottomRight.y();
+void squareAdjust(Point& start, Point& end) {
+    int x1 = start.x();
+    int y1 = start.y();
+    int x2 = end.x();
+    int y2 = end.y();
 
     int width = abs(x1 - x2);
     int height = abs(y1 - y2);
@@ -46,17 +50,17 @@ void squareAdjust(Point& topLeft, Point& bottomRight) {
 
     if (y1 < y2) {
         if (x1 < x2)
-            topLeft = Point(x1, y1);
+            start = Point(x1, y1);
         else
-            topLeft = Point(x1 - side, y1);
+            start = Point(x1 - side, y1);
     } else {
         if (x1 < x2)
-            topLeft = Point(x1, y1 - side);
+            start = Point(x1, y1 - side);
         else
-            topLeft = Point(x1 - side, y1 - side);
+            start = Point(x1 - side, y1 - side);
     }
 
-    bottomRight = Point(topLeft.x() + side, topLeft.y() + side);
+    end = Point(start.x() + side, start.y() + side);
 }
 
 pair<Point, Point> findBoundingBox(vector<Point>& points) {

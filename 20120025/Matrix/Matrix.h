@@ -129,8 +129,10 @@ public:
 
         double x = point.x();
         double y = point.y();
-        int newX = clip(round(Elements[0][0] * x + Elements[1][0] * y + Elements[2][0]), 0, WIN_WIDTH - 1);
-        int newY = clip(round(Elements[0][1] * x + Elements[1][1] * y + Elements[2][1]), 0, WIN_HEIGHT - 1);
+        // int newX = clip(round(Elements[0][0] * x + Elements[1][0] * y + Elements[2][0]), 0, WIN_WIDTH - 1);
+        // int newY = clip(round(Elements[0][1] * x + Elements[1][1] * y + Elements[2][1]), 0, WIN_HEIGHT - 1);
+        int newX = round(Elements[0][0] * x + Elements[1][0] * y + Elements[2][0]);
+        int newY = round(Elements[0][1] * x + Elements[1][1] * y + Elements[2][1]);
 
         return Point(newX, newY);
     }

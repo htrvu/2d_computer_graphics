@@ -19,8 +19,13 @@ protected:
         center = start;
 
         if (!scaled) {
+            // a and b from draw event
             a = abs(start.x() - end.x());
+            if (a > center.x())
+                a = center.x();
             b = abs(start.y() - end.y());
+            if (b > center.y())
+                b = center.y();
         }
 
         int x1 = clip(center.x() - a, 0, WIN_WIDTH - 1);

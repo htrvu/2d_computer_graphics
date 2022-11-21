@@ -9,10 +9,12 @@ int clip(int value, int min, int max);
 bool isDrawOption(int option);
 bool isColorOption(int option);
 bool isInScreen(int x, int y);
+bool isAlign(Point start, Point end);
 
 float sDistance(Point p1, Point p2);
 
-void squareAdjust(Point& topLeft, Point& bottomRight);
+// start will become topLeft, end will become bottomRight
+void squareAdjust(Point& start, Point& end);
 
 // Return the bounding box of a set of points (topLeft and bottomRight)
 pair<Point, Point> findBoundingBox(vector<Point>& points);

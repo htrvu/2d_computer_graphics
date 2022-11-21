@@ -60,6 +60,8 @@ protected:
     virtual void drawing(Canvas& canvas) {}
 
     virtual void filling(Canvas& canvas) {
+        if (isAlign(start, end))
+            return;
         findFillPoint();
         if (canvas.getCell(fillPoint.x(), fillPoint.y()).isBoundary())
             return;
