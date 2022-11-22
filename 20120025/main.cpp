@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
     SendMessage(GetConsoleWindow(), WM_SYSKEYDOWN, VK_RETURN, 0x20000000);
 
     cout << "Hoang Trong Vu - 20120025 - CNTN20" << endl;
-    cout << "Computer graphics - Lab 2: Draw and fill 2d objects" << endl;
+    cout << "Computer graphics - Lab 3: 2D Transformations" << endl;
     cout << "-----------------------------------------------------------------" << endl << endl;
      
     srand(time(NULL));
@@ -47,14 +47,12 @@ int main(int argc, char** argv) {
     // Window events
     glutReshapeFunc(preventReshapeWindow);
 
-
     // Display function
     glutDisplayFunc(Processor::display);
 
     // Run now!
     try {
-    glutMainLoop();
-
+        glutMainLoop();
     } catch (exception e) {
         cout << e.what() << endl;
     }
