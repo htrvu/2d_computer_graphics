@@ -97,6 +97,6 @@ protected:
         bottomRight = Point(maxX, maxY);
 
         // fill
-        filling(canvas);
+        fill(canvas);
     }
 };

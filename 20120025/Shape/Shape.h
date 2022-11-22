@@ -63,7 +63,7 @@ protected:
         if (isAlign(start, end) || isAlign(topLeft, bottomRight))
             return;
         findFillPoint();
-        if (canvas.getCell(fillPoint.x(), fillPoint.y()).isBoundary())
+        if (canvas.getCell(fillPoint.y(), fillPoint.x()).isBoundary())
             return;
         Fill::boundaryFill(fillPoint.x(), fillPoint.y(), layer, fillColor, canvas);
     }
@@ -101,6 +101,8 @@ public:
         else
             this->fillColor.reset();
 
+        glColor3ub(Colors::BOUNDARY.r(), Colors::BOUNDARY.g(), Colors::BOUNDARY.b());
+
         drawing(canvas);
     }
 
@@ -117,6 +119,8 @@ public:
             this->fillColor.darken();
         else
             this->fillColor.reset();
+
+        glColor3ub(this->fillColor.r(), this->fillColor.g(), this->fillColor.b());
 
         filling(canvas);
     }

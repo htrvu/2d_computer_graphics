@@ -74,7 +74,7 @@ protected:
         }
 
         // fill
-        filling(canvas);
+        fill(canvas);
     }
 
     void filling(Canvas& canvas) {

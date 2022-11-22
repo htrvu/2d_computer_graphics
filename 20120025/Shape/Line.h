@@ -82,6 +82,8 @@ protected:
         else
             this->fillColor.reset();
 
+        glColor3ub(this->fillColor.r(), this->fillColor.g(), this->fillColor.b());
+
         // Midpint
         // For line drawing, we does not draw it boundary like polygons
         int x1 = lineStart.x();

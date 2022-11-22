@@ -14,10 +14,7 @@ void init(int width, int height) {
 
 void setPixel(int x, int y, int layer, RGBColor color, Canvas& canvas, bool boundary) {
     if (canvas.setCell(y, x, color, layer, boundary)) {
-        glColor3ub(color.r(), color.g(), color.b());
-        glBegin(GL_POINTS);
         glVertex2i(x, y);
-        glEnd();
     }
 }
 

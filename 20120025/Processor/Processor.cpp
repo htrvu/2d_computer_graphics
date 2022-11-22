@@ -28,7 +28,6 @@ void Processor::reset() {
     isDrawing = false;
     newShape = nullptr;
     selectingShape = nullptr;
-    // shouldFillSelectingShape = false;
     currentDrawOption = -1;
     isSelecting = false;
     canvas.clear();
@@ -54,11 +53,7 @@ void Processor::menuEvents(int value) {
         pickingColor = Colors::colorMap[option];
         if (selectingShape) {
             selectingShape->setFillColor(pickingColor);
-            // shouldFillSelectingShape = true;
-            // shouldRedraw = false;
             glutPostRedisplay();
-        } else {
-            // shouldFillSelectingShape = false;
         }
     }
     else if (isDrawOption(option)) {
@@ -68,10 +63,8 @@ void Processor::menuEvents(int value) {
         isSelecting = false;
 
         if (selectingShape) {
-            // selectingShape->deselect(canvas);
             selectingShape->setSelecting(false);
             selectingShape = nullptr;
-            // shouldRedraw = false;
             glutPostRedisplay();
         }
     }
@@ -84,8 +77,6 @@ void Processor::menuEvents(int value) {
         if (selectingShape) {
             storage.removeShape(selectingShape->getShapeLayer());
             selectingShape = nullptr;
-            // shouldFillSelectingShape = false;
-            // shouldRedraw = true;
             glutPostRedisplay();
         }
     }
@@ -201,7 +192,6 @@ void Processor::mousePressed(int button, int state, int x, int y) {
         }
         if (newShape) {
             storage.addShape(newShape);
-            // shouldRedraw = true;
             glutPostRedisplay();
         }
     }
@@ -222,12 +212,10 @@ void Processor::mousePressed(int button, int state, int x, int y) {
             if (shape != nullptr) {
                 shape->setSelecting(true);
                 selectingShape = shape;
-                // shouldFillSelectingShape = false;   // after pick shape, we have to pick color to fill this shape
             } else {
                 selectingShape = nullptr;
             }
             
-            // shouldRedraw = false;
             glutPostRedisplay();
             return;
         }
@@ -321,14 +309,15 @@ void Processor::specialKeyPressed(int key, int x, int y) {
 
 void Processor::display(void) {
     glClear(GL_COLOR_BUFFER_BIT);
-    
-    if (option == CLEAR) {
-        glFinish();
-        return;
-    }
-
-    glClear(GL_COLOR_BUFFER_BIT);
     canvas.clear();
-    storage.draw(canvas);
+
+    glBegin(GL_POINTS);
+
+    if (option == CLEAR)
+        storage.clear();
+    else
+        storage.draw(canvas);
+
+    glEnd();
     glFlush();
 }

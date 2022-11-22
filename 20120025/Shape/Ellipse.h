@@ -137,6 +137,6 @@ protected:
         topLeft = Point(minX, minY);
         bottomRight = Point(maxX, maxY);
 
-        filling(canvas);
+        fill(canvas);
     }
 };
