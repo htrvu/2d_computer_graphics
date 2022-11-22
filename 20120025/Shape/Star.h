@@ -24,10 +24,10 @@ protected:
         int height = abs(y1 - y2);
 
         Point m1(x1 + width / 2, y1);
-        Point m2(x1, y1 + height * 3 / 10);
+        Point m2(x1, y1 + height * 2 / 5);
         Point m3(x1 + width * 1 / 5, y2);
         Point m4(x1 + width * 4 / 5, y2);
-        Point m5(x2, y1 + height * 3 / 10);
+        Point m5(x2, y1 + height * 2 / 5);
 
         Point i12 = Line::findIntersection(Line(m1, m3), Line(m2, m5));
         Point i23 = Line::findIntersection(Line(m2, m4), Line(m1, m3));
