@@ -1,6 +1,6 @@
 # Paint with layers
 
-This is my project for Lab 2 of Computer Graphics course - University of Science, VNUHCM.
+This is my project for 2D Computer Graphics labs of Computer Graphics course - University of Science, VNUHCM.
 
 Content:
 <ol>
