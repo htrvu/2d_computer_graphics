@@ -1,6 +1,6 @@
 # Paint with layers
 
-This is my project for Lab 2 of Computer Graphics course - University of Science, VNUHCM.
+This is my project for 2D Computer Graphics labs of Computer Graphics course - University of Science, VNUHCM.
 
 The main contents of this project are:
 - **Draw 2D objects**: Line, Triangle (special triangles), Quadrilateral (Rectangle and Square), Oval (Circle and Ellipse), Regular Polygons, some special shapes like Arrow, Star, and mathematic symbols (Add, Minus, Times, Divide).
