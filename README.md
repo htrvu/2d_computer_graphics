@@ -1,4 +1,4 @@
-# Paint with layers
+# 2D Computer Graphics
 
 This is my project for 2D Computer Graphics labs of Computer Graphics course - University of Science, VNUHCM.
 
