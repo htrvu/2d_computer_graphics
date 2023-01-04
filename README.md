@@ -7,7 +7,7 @@ The main contents of this project are:
 - **2D Filling algorithm**: Boundary Fill algorithm
 - **2D Transformation**: Translation, Rotation, Scaling
 
-The special thing is we can **select** a drawn shape and do something with it (filling, transforming,...). Therefore, I will store a **layer** value for every shape in order to handle this requirement.
+The special thing is that we can **select** a drawn shape and do something on it (filling, transforming,...). Therefore, I will store a **layer** value for every shape in order to handle this requirement.
 
 Demo: <a href="https://youtu.be/uLP3AdKRxbI">Link Video</a>
 <p align="center">
